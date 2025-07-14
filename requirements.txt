@@ -1,0 +1,12 @@
+pandas
+numpy
+nltk
+scikit-learn
+joblib
+tqdm
+seaborn
+matplotlib
+requests
+python-dotenv
+openpyxl
+psutil
