@@ -365,8 +365,8 @@ else:
 # FRESHSERVICE_API_KEY = "nkfxbaNF223ZpiJUMURL"
 # FRESHSERVICE_DOMAIN = "https://tataconsumerproductshelpdesk.freshservice.com"
 
-FRESHSERVICE_API_KEY = os.environ.get("FRESHSERVICE_API_KEY", "EXHRMlmZPfust7PElttj")
-FRESHSERVICE_DOMAIN = os.environ.get("FRESHSERVICE_DOMAIN", "https://060helpdesk.freshservice.com/")
+FRESHSERVICE_API_KEY = os.environ.get("FRESHSERVICE_API_KEY")
+FRESHSERVICE_DOMAIN = os.environ.get("FRESHSERVICE_DOMAIN")
 
 FRESHSERVICE_API_URL = f"{FRESHSERVICE_DOMAIN}/api/v2/tickets"
 REQUESTER_API_URL = f"{FRESHSERVICE_DOMAIN}/api/v2/requesters"
@@ -835,6 +835,17 @@ def auto_update_new_tickets():
 
 app = FastAPI()
 
+@app.get("/")
+async def root():
+    return {"message": "Your API is running..."}
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint to verify API is running.
+    Returns a simple JSON response.
+    """
+    return {"status": "ok", "message": "API is healthy"}        
+
 @app.post("/webhook/ticket")
 async def webhook_ticket(request: Request):
     """
@@ -934,14 +945,20 @@ def run_fastapi():
     uvicorn.run("main:app", host="0.0.0.0", port=80, reload=False)
 
 if __name__ == "__main__":
+    # Automatically set choice to "5" to run FastAPI server
+    choice = "5"
+
     while True:
         print("\nChoose an option:")
         print("1. Test a ticket manually")
         print("2. Monitor tickets from Freshservice API")
         print("3. Exit")
         print("4. Auto-update new tickets with predicted group")
-        print("5. Run FastAPI webhook server")  # <-- Added option 5
-        choice = input("Enter your choice (1/2/3/4/5): ").strip()
+        print("5. Run FastAPI webhook server")
+
+        # Skip input and use predefined choice
+        print(f"Auto-selected choice: {choice}")
+
         if choice == "1":
             try:
                 test_tickets = []
@@ -978,7 +995,4 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid choice. Please try again.")
-            print("Invalid choice. Please try again.")
-            print("Invalid choice. Please try again.")
-            print("Exiting...")
             break
